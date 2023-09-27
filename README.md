@@ -15,12 +15,12 @@ Version1: It is possible to use a simple version of the Nextion Screen with Ardu
 
 Version 2: STM32 is used as a relatively more professional display model and microprocessor.
 
-Version 3: It is the version in which data flow is tested using the STM32 processor and potentiometers and temperature sensors. The display is the same as Version 2.
+Version 3: It is the version in which data flow is tested using the STM32 processor, potentiometers, temperature, and communication sensors. Additionally, if you want to view the data coming with STM32 through the application on the computer or save it in a text file or Excel file, the application on the "https://github.com/koksoybedirhan/SerialCommunicationApp" website can be downloaded and used. 
 
 Main Materials:
 NX4827K043 Display, STM32F411VET6, Arduino Mega.
 
 Test Materials (Version 3):
-BMP180, 10K Potentiometers.
+BMP180 Pressure Sensor, 10K Potentiometers, LoRa e32900t30d. 
 
 >>>>>>> c0c79259965819af1b704de40642ca0291ca830a
