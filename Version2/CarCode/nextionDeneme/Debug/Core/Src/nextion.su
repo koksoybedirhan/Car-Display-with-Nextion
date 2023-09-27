@@ -1,0 +1,15 @@
+../Core/Src/nextion.c:14:6:SpeedGauge	56	static
+../Core/Src/nextion.c:25:6:SpeedNum	56	static
+../Core/Src/nextion.c:33:6:FuelGauge	56	static
+../Core/Src/nextion.c:43:6:FuelNum	56	static
+../Core/Src/nextion.c:51:6:TotalVoltNum	56	static
+../Core/Src/nextion.c:59:6:TotalCurrentNum	56	static
+../Core/Src/nextion.c:67:6:MaxTempNum	56	static
+../Core/Src/nextion.c:75:6:MinTempNum	56	static
+../Core/Src/nextion.c:83:6:MaxVoltNum	56	static
+../Core/Src/nextion.c:91:6:MinVoltNum	56	static
+../Core/Src/nextion.c:99:6:Phase1Num	56	static
+../Core/Src/nextion.c:107:6:Phase2Num	56	static
+../Core/Src/nextion.c:115:6:Phase3Num	56	static
+../Core/Src/nextion.c:123:6:Cell1Num1Num	56	static
+../Core/Src/nextion.c:131:6:Cell1Num2Num	56	static
