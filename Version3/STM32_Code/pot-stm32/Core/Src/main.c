@@ -46,6 +46,7 @@
 
 I2C_HandleTypeDef hi2c1;
 
+UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
@@ -58,6 +59,7 @@ static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART6_UART_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -107,6 +109,15 @@ uint16_t cell2num9value=0;
 uint16_t cell2num10value=0;
 
 float speedFloat;
+
+struct telemetry
+{
+	uint16_t telemetrySpeed;
+	uint16_t telemetryFuel;
+	uint16_t telemetryTemp;
+	uint16_t telemetryVolt;
+};
+
 /* USER CODE END 0 */
 
 /**
@@ -140,6 +151,7 @@ int main(void)
   MX_ADC1_Init();
   MX_I2C1_Init();
   MX_USART6_UART_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   BMP180_Start();
   /* USER CODE END 2 */
@@ -151,32 +163,45 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  struct telemetry package;
+
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1,1000);
 	  readval = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
+
 	  Temperature = BMP180_Calc_Temp();
-
 	  Pressure = BMP180_Calc_Press (0);
-
 	  Altitude = BMP180_Calc_Alt(0);
-
 	  Kalman_Temp = BMP180_Kalman_Temp(Temperature);
-
 	  Kalman_Press = BMP180_Kalman_Press(Pressure);
-
 	  Kalman_Alt = BMP180_Kalman_Alt(Altitude);
 
 	  SpeedGauge("z0.val", readval/14);
-
 	  speedFloat = ((float)readval/4065.0)*100;
 	  SpeedNum("n1.val", speedFloat);
 
 	  int kalmanint = Kalman_Temp;
+	  MaxTempNum("n0s.val", kalmanint);
 
-	  TotalVoltNum("n0s.val", kalmanint);
+	  totalvoltvalue = 20;
+	  TotalVoltNum("n2.val", totalvoltvalue);
 
-	  HAL_Delay(10);
+	  totalcurrentvalue = 25;
+	  TotalCurrentNum("n3.val", totalcurrentvalue);
+
+	  package.telemetrySpeed = readval;
+	  package.telemetryFuel = totalcurrentvalue;
+	  package.telemetryTemp = kalmanint;
+	  package.telemetryVolt = totalvoltvalue;
+
+	  uint8_t dataToSend[sizeof(package)];
+
+	  memcpy(dataToSend, &package, sizeof(package));
+
+	  HAL_UART_Transmit(&huart2, dataToSend, sizeof(dataToSend), HAL_MAX_DELAY);
+
+	  HAL_Delay(15);
   }
   /* USER CODE END 3 */
 }
@@ -313,6 +338,39 @@ static void MX_I2C1_Init(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 9600;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * @brief USART6 Initialization Function
   * @param None
   * @retval None
@@ -355,6 +413,7 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
