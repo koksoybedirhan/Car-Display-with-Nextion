@@ -11,5 +11,5 @@ Main Materials:
 NX4827K043 Display, STM32F411VET6, Arduino Mega.
 
 Test Materials (Version 3):
-BMP180, 10K Potentiometers, LoRa e32900t30d.
+BMP180 Pressure Sensor, 10K Potentiometers, LoRa e32900t30d. 
 
